@@ -20,13 +20,54 @@ def AC3(csp, queue=None, removals=None):
             constraint propagation.  The problem cannot be solved from the
             current configuration of the csp.
     """
+    #Queue creation
+    if queue == None:
+        queue = []
+    # Queue up binary arcs
+    csp.display(csp.infer_assignment())
+    #print(csp.constraints)
+    for i in csp.variables:
+        neighborsOfI = csp.neighbors[i]
+        for j in neighborsOfI:
+            newTuple = (i,j)
+            queue.append(newTuple)
+
+    #While the queue isn't empty
+        while not (len(queue) == 0):
+            # (Xi,Xj) = queue.dequeue() #get binary constraints
+            (Xi,Xj) = queue.pop()
+            #print(Xi,Xj)
+
+        #if revise(CSP, xi,xj):
+        if revise(csp,Xi,Xj,removals):
+            if not csp.curr_domains[Xj]:
+                # if domain(xi) is not empty return false
+                csp.display(csp.infer_assignment())
+                return False
+            else:
+                tempNeighbors = csp.neighbors[Xj]
+                tempNeighbors.remove(Xi)
+                for Xk in tempNeighbors:
+                    queue.append((Xk,Xj))
+    print(csp.curr_domains)
+    csp.display(csp.infer_assignment())
+    return True
+
+
+            #else
+                #for each (xk) in {neighbors(xi)-xj}
+                    #queue.enqueue(xk,xi)
+
+
+
+
 
     # Hints:
     # Remember that:
     #    csp.variables is a list of variables
     #    csp.neighbors[x] is the neighbors of variable x
     
-    raise NotImplemented
+    #raise NotImplemented
 
 
 def revise(csp, Xi, Xj, removals):
@@ -42,5 +83,19 @@ def revise(csp, Xi, Xj, removals):
         about it and possibly updated the removed list (if we are maintaining
         one)
     """
-
-    raise NotImplemented
+    #revised = false
+    revised = False
+    #for each x in domain xi
+    for x in csp.curr_domains[Xi]:
+        constraintSatisifed = False
+        #if there isn't a y that exists such that it is contained in the domain xj such that constraint holds between x and y
+        for y in csp.curr_domains[Xj]:
+            if  csp.constraints(Xi,x,Xj,y):
+                constraintSatisifed = True
+            #delete x from domain xi
+        if not constraintSatisifed:
+            csp.prune(Xi,x,removals)
+            # revised = true
+            revised = True
+    #return revised
+    return revised

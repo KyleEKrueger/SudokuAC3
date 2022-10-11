@@ -26,4 +26,4 @@ def backtracking_search(csp,
     
     # See Figure 6.5 of your book for details
 
-    raise notImplemented
+    #raise notImplemented

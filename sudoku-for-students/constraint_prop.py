@@ -21,12 +21,14 @@ def AC3(csp, queue=None, removals=None):
             current configuration of the csp.
     """
 
+    print("Constraints:"+ csp.constraints)
+
     # Hints:
     # Remember that:
     #    csp.variables is a list of variables
     #    csp.neighbors[x] is the neighbors of variable x
     
-    raise NotImplemented
+    #raise NotImplemented
 
 
 def revise(csp, Xi, Xj, removals):

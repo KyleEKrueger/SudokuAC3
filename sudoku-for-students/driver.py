@@ -7,8 +7,9 @@ from backtrack import backtracking_search
 
 for puzzle in [easy1, harder1]:
     s = Sudoku(puzzle)  # construct a Sudoku problem
+    AC3(s);
 
     # solve as much as possible by AC3 then backtrack search if needed
     # using MRV and MAC.
     
-    raise NotImplemented
+    #raise NotImplemented

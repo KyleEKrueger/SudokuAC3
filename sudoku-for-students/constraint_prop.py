@@ -23,32 +23,43 @@ def AC3(csp, queue=None, removals=None):
     #Queue creation
     if queue == None:
         queue = []
+    if removals == None:
+        removals = [(vars,int)]
     # Queue up binary arcs
-    csp.display(csp.infer_assignment())
     print(csp.constraints)
+    loopcounter = 0
+
     for i in csp.variables:
         neighborsOfI = csp.neighbors[i]
         for j in neighborsOfI:
             newTuple = (i,j)
-            queue.append(newTuple)
-
+            if not (queue.__contains__(newTuple)):
+                queue.append(newTuple)
+        #print(queue)
     #While the queue isn't empty
-        while queue:
-            # (Xi,Xj) = queue.dequeue() #get binary constraints
-            (Xi,Xj) = queue.pop()
-            print(Xi,Xj)
+    while not (len(queue) == 0):
+        loopcounter = loopcounter + 1
+        # (Xi,Xj) = queue.dequeue() #get binary constraints
+        (Xi,Xj) = queue.pop()
+        print(Xi,Xj)
 
-        #if revise(CSP, xi,xj):
+     #if revise(CSP, xi,xj):
         if revise(csp,Xi,Xj,removals):
-            if not csp.domains[Xi]:
-                # if domain(xi) is not empty return false
+            if not csp.curr_domains[Xi]:
+            # if domain(xi) is not empty return false
+                csp.display(csp.infer_assignment())
+
                 return False
                 print("We should have returned:")
             else:
                 tempNeighbors = csp.neighbors[Xi]
-                tempNeighbors.remove(Xj)
+                if Xj in tempNeighbors:
+                    tempNeighbors.remove(Xj)
                 for Xk in tempNeighbors:
-                    queue.append((Xk,Xj))
+                    #print("\n")
+                    if not (Xk,Xj) in queue:
+                        queue.append((Xk,Xj))
+    csp.display(csp.infer_assignment())
     return True
 
 
@@ -84,16 +95,17 @@ def revise(csp, Xi, Xj, removals):
     #revised = false
     revised = False
     #for each x in domain xi
-    for x in csp.domains[Xi]:
+    for x in csp.curr_domains[Xi]:
         constraintSatisifed = False
         #if there isn't a y that exists such that it is contained in the domain xj such that constraint holds between x and y
-        for y in csp.domains[Xj]:
+        for y in csp.curr_domains[Xj]:
             if  csp.constraints(Xi,x,Xj,y):
                 constraintSatisifed = True
             #delete x from domain xi
         if not constraintSatisifed:
-            csp.prune(Xi,x,removals)
             # revised = true
+            supposedReturn = csp.suppose(Xi,x)
+            removals.append((Xi,supposedReturn))
             revised = True
     #return revised
     return revised

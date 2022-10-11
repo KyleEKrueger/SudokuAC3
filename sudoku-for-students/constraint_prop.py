@@ -21,34 +21,35 @@ def AC3(csp, queue=None, removals=None):
             current configuration of the csp.
     """
     #Queue creation
-    if queue == None:
+    if queue is None:
         queue = []
+        for i in csp.variables:
+            neighborsOfI = csp.neighbors[i]
+            for j in neighborsOfI:
+                newTuple = (i,j)
+                queue.append(newTuple)
+
     # Queue up binary arcs
     csp.display(csp.infer_assignment())
     #print(csp.constraints)
-    for i in csp.variables:
-        neighborsOfI = csp.neighbors[i]
-        for j in neighborsOfI:
-            newTuple = (i,j)
-            queue.append(newTuple)
-
+    
     #While the queue isn't empty
-        while not (len(queue) == 0):
+    while not (len(queue) == 0):
             # (Xi,Xj) = queue.dequeue() #get binary constraints
-            (Xi,Xj) = queue.pop()
+        Xi,Xj = queue.pop()
             #print(Xi,Xj)
 
         #if revise(CSP, xi,xj):
         if revise(csp,Xi,Xj,removals):
-            if not csp.curr_domains[Xj]:
+            if len(csp.curr_domains[Xi]) == 0:
                 # if domain(xi) is not empty return false
                 csp.display(csp.infer_assignment())
                 return False
             else:
-                tempNeighbors = csp.neighbors[Xj]
-                tempNeighbors.remove(Xi)
+                tempNeighbors = csp.neighbors[Xi]
+                tempNeighbors.remove(Xj)
                 for Xk in tempNeighbors:
-                    queue.append((Xk,Xj))
+                    queue.append((Xk,Xi))
     print(csp.curr_domains)
     csp.display(csp.infer_assignment())
     return True
@@ -83,6 +84,8 @@ def revise(csp, Xi, Xj, removals):
         about it and possibly updated the removed list (if we are maintaining
         one)
     """
+    if removals == None:
+        removals = []
     #revised = false
     revised = False
     #for each x in domain xi

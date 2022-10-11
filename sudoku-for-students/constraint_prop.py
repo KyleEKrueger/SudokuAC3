@@ -21,7 +21,9 @@ def AC3(csp, queue=None, removals=None):
             current configuration of the csp.
     """
 
-    print("Constraints:"+ csp.constraints)
+    csp.display(csp.infer_assignment())
+
+
 
     # Hints:
     # Remember that:

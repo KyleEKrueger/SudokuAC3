@@ -39,7 +39,19 @@ def AC3(csp, queue=None, removals=None):
             print(Xi,Xj)
 
         #if revise(CSP, xi,xj):
-            #if domain(xi) is not empty return false
+        if revise(csp,Xi,Xj,removals):
+            if not csp.domains[Xi]:
+                # if domain(xi) is not empty return false
+                return False
+                print("We should have returned:")
+            else:
+                tempNeighbors = csp.neighbors[Xi]
+                tempNeighbors.remove(Xj)
+                for Xk in tempNeighbors:
+                    queue.append((Xk,Xj))
+    return True
+
+
             #else
                 #for each (xk) in {neighbors(xi)-xj}
                     #queue.enqueue(xk,xi)
@@ -69,5 +81,20 @@ def revise(csp, Xi, Xj, removals):
         about it and possibly updated the removed list (if we are maintaining
         one)
     """
+    #revised = false
+    revised = False
+    #for each x in domain xi
+    for x in csp.domains[Xi]:
+        constraintSatisifed = False
+        #if there isn't a y that exists such that it is contained in the domain xj such that constraint holds between x and y
+        for y in csp.domains[Xj]:
+            if  csp.constraints(Xi,x,Xj,y):
+                constraintSatisifed = True
+            #delete x from domain xi
+        if not constraintSatisifed:
+            csp.prune(Xi,x,removals)
+            # revised = true
+            revised = True
+    #return revised
+    return revised
 
-    raise NotImplemented

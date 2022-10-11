@@ -33,8 +33,11 @@ def AC3(csp, queue=None, removals=None):
             queue.append(newTuple)
 
     #While the queue isn't empty
+        while queue:
+            # (Xi,Xj) = queue.dequeue() #get binary constraints
+            (Xi,Xj) = queue.pop()
+            print(Xi,Xj)
 
-        #(Xi,Xj) = queue.dequeue() #get binary constraints
         #if revise(CSP, xi,xj):
             #if domain(xi) is not empty return false
             #else

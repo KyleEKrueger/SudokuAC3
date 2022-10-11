@@ -20,8 +20,28 @@ def AC3(csp, queue=None, removals=None):
             constraint propagation.  The problem cannot be solved from the
             current configuration of the csp.
     """
-
+    #Queue creation
+    if queue == None:
+        queue = []
+    # Queue up binary arcs
     csp.display(csp.infer_assignment())
+    print(csp.constraints)
+    for i in csp.variables:
+        neighborsOfI = csp.neighbors[i]
+        for j in neighborsOfI:
+            newTuple = (i,j)
+            queue.append(newTuple)
+
+    #While the queue isn't empty
+
+        #(Xi,Xj) = queue.dequeue() #get binary constraints
+        #if revise(CSP, xi,xj):
+            #if domain(xi) is not empty return false
+            #else
+                #for each (xk) in {neighbors(xi)-xj}
+                    #queue.enqueue(xk,xi)
+
+
 
 
 

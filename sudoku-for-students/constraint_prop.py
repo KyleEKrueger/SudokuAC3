@@ -30,7 +30,7 @@ def AC3(csp, queue=None, removals=None):
                 queue.append(newTuple)
 
     # Queue up binary arcs
-    csp.display(csp.infer_assignment())
+    #csp.display(csp.infer_assignment())
     #print(csp.constraints)
     
     #While the queue isn't empty
@@ -44,20 +44,21 @@ def AC3(csp, queue=None, removals=None):
             if len(csp.curr_domains[Xi]) == 0:
                 # if domain(xi) is not empty return false
                 csp.display(csp.infer_assignment())
+                print("Returning False!")
                 return False
+            # else
+            #   for each (xk) in {neighbors(xi)-xj}
+            #   queue.enqueue(xk,xi)
             else:
                 tempNeighbors = csp.neighbors[Xi]
                 tempNeighbors.remove(Xj)
                 for Xk in tempNeighbors:
                     queue.append((Xk,Xi))
-    print(csp.curr_domains)
-    csp.display(csp.infer_assignment())
+    #csp.display(csp.infer_assignment())
     return True
 
 
-            #else
-                #for each (xk) in {neighbors(xi)-xj}
-                    #queue.enqueue(xk,xi)
+
 
 
 

@@ -12,6 +12,12 @@ from csp_lib.backtrack_util import (first_unassigned_variable,
                                     no_inference)
 
 
+def consistent(csp, var, val, assignment):
+    #Checks if the neighbor has been assigned, and returns false if the value we are assigning has been taken
+    for neighbor in csp.neighbors[var]:
+        if neighbor in assignment and assignment[neighbor] is val:
+            return False
+    return True
 def backtracking_search(csp,
                         select_unassigned_variable=first_unassigned_variable,
                         order_domain_values=unordered_domain_values,
@@ -26,25 +32,24 @@ def backtrack(assignment,csp,select_unassigned_variable,order_domain_values,infe
     if len(assignment) == len(csp.variables):
         return assignment
     # var = select-unassigned-variable(CSP, assignment)
-    var = select_unassigned_variable(csp.infer_assignment(), csp)
+    var = select_unassigned_variable(assignment, csp)
     # for each value in order-domain-values(var, assignment, csp):
-    for val in order_domain_values(var, csp.infer_assignment(), csp):
+    for val in order_domain_values(var, assignment, csp):
         # if value consistent with assignment:
+        if consistent(csp,var,val,assignment):
+            # assignment.add ({var = value})
+            assignment[var] = val
+            removals = csp.suppose(var, val) #flag
+            if verbose: print(removals)
+            # inferences = inference(CSP, var, assignment)
+            inferences = inference(csp, var, val, assignment, removals)
+            # if inferences does not equal failure:
+            if inferences:
+                # assignment.add(inferences)
 
-        # assignment.add ({var = value})
-        assignment[var] = val
-        removals = csp.suppose(var, val)
-        if verbose: print(removals)
-        # inferences = inference(CSP, var, assignment)
-        # def mac(csp, var, value, assignment, removals):
-        inferences = inference(csp, var, val, assignment, removals)
-        # if inferences does not equal failure:
-        if inferences:
-            # assignment.add(inferences)
-
-            # result = backtrack(assignment, CSP)
-            result = backtrack(assignment,csp, select_unassigned_variable, order_domain_values, inference, verbose)
-            if result != "Failure": return result
+                # result = backtrack(assignment, CSP)
+                result = backtrack(assignment,csp, select_unassigned_variable, order_domain_values, inference, verbose)
+                if result != "Failure": return result
         csp.restore(removals)
     return "Failure"
 

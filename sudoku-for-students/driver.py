@@ -12,12 +12,12 @@ from backtrack import backtracking_search
 if True:
     completed = False
     s = Sudoku(harder1)  # construct a Sudoku problem
-    AC3(s)
-    completed = s.goal_test(s.curr_domains)
+    completed = AC3(s)
+    completed = False
     if completed: print("AC3 used: Puzzle Solved")
     elif not completed:
-        backtracking_search(s,mrv,unordered_domain_values,mac)
-        completed = s.goal_test(s.curr_domains)
+        completed = backtracking_search(s,mrv,unordered_domain_values,mac)
+
 
         if completed:
             print("Backtracking used: Puzzle Solved")
